@@ -1,3 +1,5 @@
+use std::io;
+
 use anyhow::Result;
 use game_info::GameInfo;
 use select::document::Document;
@@ -31,8 +33,13 @@ struct Team {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let match_id = 1370415;
-    let url = format!("https://popflash.site/match/{}", match_id);
+    println!("Enter Match ID: ");
+    let mut match_id = String::new();
+    io::stdin().read_line(&mut match_id).unwrap();
+    
+    let url: String = format!("https://popflash.site/match/{}", match_id);
+    println!("Fetching {}", url);
+
     let body: String = reqwest::get(url).await?.text().await?;
     let document = Document::from(body.as_ref());
 
