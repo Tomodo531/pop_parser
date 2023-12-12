@@ -1,7 +1,10 @@
 use select::document::Document;
 use serde::{Deserialize, Serialize};
 
-use crate::{table::{self, Team}, Stat};
+use crate::{
+    table_scraper::{self, Team},
+    Stats,
+};
 
 pub type ShotsFiredStats = Vec<PlayerShotsFiredStats>;
 
@@ -22,10 +25,10 @@ pub struct PlayerShotsFiredStats {
     dd: i32,
 }
 
-pub fn get_shots_fired_stats(document: &Document) -> Stat<ShotsFiredStats> {
-    let (team_1, team_2) = table::get_table(document, TABLE_NAME);
+pub fn get_shots_fired_stats(document: &Document) -> Stats<ShotsFiredStats> {
+    let (team_1, team_2) = table_scraper::get_table(document, TABLE_NAME);
 
-    Stat {
+    Stats {
         team_1: get_player_stats(team_1),
         team_2: get_player_stats(team_2),
     }

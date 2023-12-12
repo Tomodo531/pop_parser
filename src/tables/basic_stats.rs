@@ -2,8 +2,8 @@ use select::document::Document;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    table::{self, Team},
-    Stat,
+    table_scraper::{self, Team},
+    Stats,
 };
 
 pub type BasicStats = Vec<PlayerBasicStats>;
@@ -25,10 +25,10 @@ pub struct PlayerBasicStats {
     rp: i32,
 }
 
-pub fn get_basic_stats(document: &Document) -> Stat<BasicStats> {
-    let (team_1, team_2) = table::get_table(document, TABLE_NAME);
+pub fn get_basic_stats(document: &Document) -> Stats<BasicStats> {
+    let (team_1, team_2) = table_scraper::get_table(document, TABLE_NAME);
 
-    Stat {
+    Stats {
         team_1: get_player_stats(team_1),
         team_2: get_player_stats(team_2),
     }

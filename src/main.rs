@@ -1,23 +1,19 @@
 use anyhow::Result;
-use basic_stats::BasicStats;
-use extra_stats::ExtraStats;
-use flash_stats::FlashStats;
 use game_info::GameInfo;
-use kills::KillsStats;
 use select::document::Document;
 use serde::{Deserialize, Serialize};
-use shots_fired::ShotsFiredStats;
+use tables::basic_stats::{self, BasicStats};
+use tables::extra_stats::{self, ExtraStats};
+use tables::flash_stats::{self, FlashStats};
+use tables::kills::{self, KillsStats};
+use tables::shots_fired::{self, ShotsFiredStats};
 
-mod basic_stats;
-mod extra_stats;
-mod flash_stats;
 mod game_info;
-mod kills;
-mod shots_fired;
-mod table;
+mod table_scraper;
+mod tables;
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Stat<T> {
+pub struct Stats<T> {
     pub team_1: T,
     pub team_2: T,
 }
