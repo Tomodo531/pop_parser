@@ -17,6 +17,12 @@ mod shots_fired;
 mod table;
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct Stat<T> {
+    pub team_1: T,
+    pub team_2: T,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 struct MatchData {
     game_info: GameInfo,
     team_1: Team,
@@ -47,32 +53,32 @@ async fn main() -> Result<()> {
         team_1,
         team_2,
     };
-    println!("{:?}", serde_json::json!(&match_data));
 
+    println!("{:?}", serde_json::to_string(&match_data));
     Ok(())
 }
 
 fn get_teams(document: &Document) -> (Team, Team) {
-    let (team_1_basic, team_2_basic) = basic_stats::get_basic_stats(document);
-    let (team_1_flash, team_2_flash) = flash_stats::get_flash_stats(document);
-    let (team_1_kills, team_2_kills) = kills::get_kills_stats(document);
-    let (team_1_shots, team_2_shots) = shots_fired::get_shots_fired_stats(document);
-    let (team_1_extra, team_2_extra) = extra_stats::get_extra_stats(document);
+    let basic_stats = basic_stats::get_basic_stats(document);
+    let flash_stats = flash_stats::get_flash_stats(document);
+    let kills = kills::get_kills_stats(document);
+    let shots_fired = shots_fired::get_shots_fired_stats(document);
+    let extra_stats = extra_stats::get_extra_stats(document);
 
     let team_1 = Team {
-        basic_stats: team_1_basic,
-        flash_stats: team_1_flash,
-        kills: team_1_kills,
-        shots_fired: team_1_shots,
-        extra_stats: team_1_extra,
+        basic_stats: basic_stats.team_1,
+        flash_stats: flash_stats.team_1,
+        kills: kills.team_1,
+        shots_fired: shots_fired.team_1,
+        extra_stats: extra_stats.team_1,
     };
 
     let team_2 = Team {
-        basic_stats: team_2_basic,
-        flash_stats: team_2_flash,
-        kills: team_2_kills,
-        shots_fired: team_2_shots,
-        extra_stats: team_2_extra,
+        basic_stats: basic_stats.team_2,
+        flash_stats: flash_stats.team_2,
+        kills: kills.team_2,
+        shots_fired: shots_fired.team_2,
+        extra_stats: extra_stats.team_2,
     };
 
     (team_1, team_2)

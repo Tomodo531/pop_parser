@@ -1,12 +1,12 @@
 use select::document::Document;
+use serde::{Deserialize, Serialize};
 
-use crate::table::{self, Team};
+use crate::{table::{self, Team}, Stat};
 
 pub type FlashStats = Vec<PlayerFlashStats>;
 
 const TABLE_NAME: &str = "FLASH STATS";
 
-use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlayerFlashStats {
     name: String,
@@ -20,33 +20,35 @@ pub struct PlayerFlashStats {
     ftd: f32,
 }
 
-pub fn get_flash_stats(document: &Document) -> (FlashStats, FlashStats) {
+pub fn get_flash_stats(document: &Document) -> Stat<FlashStats> {
     let (team_1, team_2) = table::get_table(document, TABLE_NAME);
 
-    let team_1_flash_stats: FlashStats = get_player_stats(team_1);
-    let team_2_flash_stats: FlashStats = get_player_stats(team_2);
-
-    (team_1_flash_stats, team_2_flash_stats)
+    Stat {
+        team_1: get_player_stats(team_1),
+        team_2: get_player_stats(team_2),
+    }
 }
 
 fn get_player_stats(team: Team) -> FlashStats {
     let mut flash_stats: FlashStats = vec![];
 
     for player in team {
-        let player_flash_stats = PlayerFlashStats {
-            name: player[0].parse().unwrap(),
-            fa: player[1].parse().unwrap(),
-            ft: player[2].parse().unwrap(),
-            feh: player[3].parse().unwrap(),
-            fep: player[4].parse().unwrap(),
-            fed: player[5].parse().unwrap(),
-            fth: player[6].parse().unwrap(),
-            ftp: player[7].parse().unwrap(),
-            ftd: player[8].parse().unwrap(),
-        };
-
-        flash_stats.push(player_flash_stats);
+        flash_stats.push(create_player_flash_stats(player));
     }
 
     flash_stats
+}
+
+fn create_player_flash_stats(player: Vec<String>) -> PlayerFlashStats {
+    PlayerFlashStats {
+        name: player[0].parse().unwrap(),
+        fa: player[1].parse().unwrap(),
+        ft: player[2].parse().unwrap(),
+        feh: player[3].parse().unwrap(),
+        fep: player[4].parse().unwrap(),
+        fed: player[5].parse().unwrap(),
+        fth: player[6].parse().unwrap(),
+        ftp: player[7].parse().unwrap(),
+        ftd: player[8].parse().unwrap(),
+    }
 }
