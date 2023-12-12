@@ -33,7 +33,7 @@ fn get_table_row(tbody: Node) -> Team {
                 .enumerate()
                 .map(|(index, td)| {
                     if index == 0 {
-                        let tag: Option<Node<'_>> = td.find(Name("a")).next();
+                        let tag = td.find(Name("a")).find(|name| name.text() != "🌵");
 
                         match tag {
                             Some(name) => return name.text(),
