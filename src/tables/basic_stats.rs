@@ -1,14 +1,11 @@
 use select::document::Document;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    table_scraper::{self, Team},
-    Stats,
-};
+use crate::table_scraper::{self, Team};
+
+use super::stats::{Stats, StatsTrait};
 
 pub type BasicStats = Vec<PlayerBasicStats>;
-
-const TABLE_NAME: &str = "BASIC STATS";
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlayerBasicStats {
@@ -25,36 +22,40 @@ pub struct PlayerBasicStats {
     rp: i32,
 }
 
-pub fn get_basic_stats(document: &Document) -> Stats<BasicStats> {
-    let (team_1, team_2) = table_scraper::get_table(document, TABLE_NAME);
+impl StatsTrait<PlayerBasicStats> for Stats<PlayerBasicStats> {
+    const TABLE_NAME: &'static str = "BASIC STATS";
 
-    Stats {
-        team_1: get_player_stats(team_1),
-        team_2: get_player_stats(team_2),
-    }
-}
+    fn get_stats(document: &Document) -> Stats<BasicStats> {
+        let (team_1, team_2) = table_scraper::get_table(document, Self::TABLE_NAME);
 
-fn get_player_stats(team: Team) -> Vec<PlayerBasicStats> {
-    let mut basic_stats: Vec<PlayerBasicStats> = vec![];
-    for player in team {
-        basic_stats.push(create_player_basic_stats(player));
+        Stats {
+            team_1: Self::get_player_stats(team_1),
+            team_2: Self::get_player_stats(team_2),
+        }
     }
 
-    basic_stats
-}
+    fn get_player_stats(team: Team) -> BasicStats {
+        let mut basic_stats: BasicStats = vec![];
+        for player in team {
+            basic_stats.push(Self::create_player_stats(player));
+        }
 
-fn create_player_basic_stats(player: Vec<String>) -> PlayerBasicStats {
-    PlayerBasicStats {
-        name: player[0].parse().unwrap(),
-        k: player[1].parse().unwrap(),
-        a: player[2].parse().unwrap(),
-        d: player[3].parse().unwrap(),
-        adr: player[4].parse().unwrap(),
-        hltv: player[5].parse().unwrap(),
-        ck: player[6].parse().unwrap(),
-        bp: player[7].parse().unwrap(),
-        bd: player[8].parse().unwrap(),
-        hs: player[9].parse().unwrap(),
-        rp: player[10].parse().unwrap(),
+        basic_stats
+    }
+
+    fn create_player_stats(player: Vec<String>) -> PlayerBasicStats {
+        PlayerBasicStats {
+            name: player[0].parse().unwrap(),
+            k: player[1].parse().unwrap(),
+            a: player[2].parse().unwrap(),
+            d: player[3].parse().unwrap(),
+            adr: player[4].parse().unwrap(),
+            hltv: player[5].parse().unwrap(),
+            ck: player[6].parse().unwrap(),
+            bp: player[7].parse().unwrap(),
+            bd: player[8].parse().unwrap(),
+            hs: player[9].parse().unwrap(),
+            rp: player[10].parse().unwrap(),
+        }
     }
 }

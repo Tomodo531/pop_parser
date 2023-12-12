@@ -2,21 +2,16 @@ use anyhow::Result;
 use game_info::GameInfo;
 use select::document::Document;
 use serde::{Deserialize, Serialize};
-use tables::basic_stats::{self, BasicStats};
-use tables::extra_stats::{self, ExtraStats};
-use tables::flash_stats::{self, FlashStats};
-use tables::kills::{self, KillsStats};
-use tables::shots_fired::{self, ShotsFiredStats};
+use tables::basic_stats::{BasicStats, PlayerBasicStats};
+use tables::extra_stats::{ExtraStats, PlayerExtraStats};
+use tables::flash_stats::{FlashStats, PlayerFlashStats};
+use tables::kills::{KillsStats, PlayerKillsStats};
+use tables::shots_fired::{PlayerShotsFiredStats, ShotsFiredStats};
+use tables::stats::{Stats, StatsTrait};
 
 mod game_info;
 mod table_scraper;
 mod tables;
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Stats<T> {
-    pub team_1: T,
-    pub team_2: T,
-}
 
 #[derive(Serialize, Deserialize, Debug)]
 struct MatchData {
@@ -55,11 +50,11 @@ async fn main() -> Result<()> {
 }
 
 fn get_teams(document: &Document) -> (Team, Team) {
-    let basic_stats = basic_stats::get_basic_stats(document);
-    let flash_stats = flash_stats::get_flash_stats(document);
-    let kills = kills::get_kills_stats(document);
-    let shots_fired = shots_fired::get_shots_fired_stats(document);
-    let extra_stats = extra_stats::get_extra_stats(document);
+    let basic_stats = Stats::<PlayerBasicStats>::get_stats(document);
+    let flash_stats = Stats::<PlayerFlashStats>::get_stats(document);
+    let kills = Stats::<PlayerKillsStats>::get_stats(document);
+    let shots_fired = Stats::<PlayerShotsFiredStats>::get_stats(document);
+    let extra_stats = Stats::<PlayerExtraStats>::get_stats(document);
 
     let team_1 = Team {
         basic_stats: basic_stats.team_1,

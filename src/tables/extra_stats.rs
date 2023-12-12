@@ -1,14 +1,11 @@
 use select::document::Document;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    table_scraper::{self, Team},
-    Stats,
-};
+use crate::table_scraper::{self, Team};
+
+use super::stats::{Stats, StatsTrait};
 
 pub type ExtraStats = Vec<PlayerExtraStats>;
-
-const TABLE_NAME: &str = "EXTRA STATS";
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlayerExtraStats {
@@ -26,38 +23,41 @@ pub struct PlayerExtraStats {
     sr: i32,
 }
 
-pub fn get_extra_stats(document: &Document) -> Stats<ExtraStats> {
-    let (team_1, team_2) = table_scraper::get_table(document, TABLE_NAME);
+impl StatsTrait<PlayerExtraStats> for Stats<PlayerExtraStats> {
+    const TABLE_NAME: &'static str = "EXTRA STATS";
 
-    Stats {
-        team_1: get_player_stats(team_1),
-        team_2: get_player_stats(team_2),
-    }
-}
+    fn get_stats(document: &Document) -> Stats<ExtraStats> {
+        let (team_1, team_2) = table_scraper::get_table(document, Self::TABLE_NAME);
 
-fn get_player_stats(team: Team) -> ExtraStats {
-    let mut extra_stats: ExtraStats = vec![];
-
-    for player in team {
-        extra_stats.push(create_player_extra_stats(player));
+        Stats {
+            team_1: Self::get_player_stats(team_1),
+            team_2: Self::get_player_stats(team_2),
+        }
     }
 
-    extra_stats
-}
+    fn get_player_stats(team: Team) -> ExtraStats {
+        let mut extra_stats: ExtraStats = vec![];
+        for player in team {
+            extra_stats.push(Self::create_player_stats(player));
+        }
 
-fn create_player_extra_stats(player: Vec<String>) -> PlayerExtraStats {
-    PlayerExtraStats {
-        name: player[0].parse().unwrap(),
-        fk: player[1].parse().unwrap(),
-        fd: player[2].parse().unwrap(),
-        sk: player[3].parse().unwrap(),
-        sd: player[4].parse().unwrap(),
-        pk: player[5].parse().unwrap(),
-        pd: player[6].parse().unwrap(),
-        nk: player[7].parse().unwrap(),
-        nd: player[8].parse().unwrap(),
-        kare: player[9].parse().unwrap(),
-        dare: player[10].parse().unwrap(),
-        sr: player[11].parse().unwrap(),
+        extra_stats
+    }
+
+    fn create_player_stats(player: Vec<String>) -> PlayerExtraStats {
+        PlayerExtraStats {
+            name: player[0].parse().unwrap(),
+            fk: player[1].parse().unwrap(),
+            fd: player[2].parse().unwrap(),
+            sk: player[3].parse().unwrap(),
+            sd: player[4].parse().unwrap(),
+            pk: player[5].parse().unwrap(),
+            pd: player[6].parse().unwrap(),
+            nk: player[7].parse().unwrap(),
+            nd: player[8].parse().unwrap(),
+            kare: player[9].parse().unwrap(),
+            dare: player[10].parse().unwrap(),
+            sr: player[11].parse().unwrap(),
+        }
     }
 }
