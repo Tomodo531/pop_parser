@@ -7,8 +7,6 @@ use crate::tables::kills::{KillsStats, PlayerKillsStats};
 use crate::tables::shots_fired::{PlayerShotsFiredStats, ShotsFiredStats};
 use crate::tables::stats::{Stats, StatsTrait};
 use anyhow::Result;
-use axum::http::StatusCode;
-use axum::response::{IntoResponse, Response};
 use axum::{debug_handler, Json};
 use select::document::Document;
 use serde::{Deserialize, Serialize};
@@ -80,4 +78,3 @@ fn get_teams(document: &Document) -> (Team, Team) {
 
     (team_1, team_2)
 }
-

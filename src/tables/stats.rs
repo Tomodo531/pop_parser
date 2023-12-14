@@ -7,25 +7,25 @@ use serde::{Deserialize, Serialize};
 pub enum StatType {
     Float(f32),
     Int(i32),
-    Percentage(String),    
-    NaN(String),    
+    Percentage(String),
+    NaN(String),
 }
 
-pub fn parse_stat(input: &str) -> StatType{
+pub fn parse_stat(input: &str) -> StatType {
     // Try parsing as f32
     if let Ok(float_val) = input.parse::<f32>() {
-        return StatType::Float(float_val)
+        return StatType::Float(float_val);
     }
 
     // Try parsing as i32
     if let Ok(int_val) = input.parse::<i32>() {
-        return StatType::Int(int_val)
+        return StatType::Int(int_val);
     }
 
     // Check if it ends with "%", then parse as Percentage
     if input.ends_with('%') {
         let value = input.trim_end_matches('%').to_string();
-        return StatType::Percentage(value)
+        return StatType::Percentage(value);
     }
 
     // If none of the above conditions are met, treat it as NaN

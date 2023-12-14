@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::tables::table_scraper::{self, Team};
 
-use super::stats::{Stats, StatsTrait, parse_stat, StatType};
+use super::stats::{parse_stat, StatType, Stats, StatsTrait};
 
 pub type KillsStats = Vec<PlayerKillsStats>;
 

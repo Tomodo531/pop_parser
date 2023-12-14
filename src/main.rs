@@ -2,10 +2,10 @@ use anyhow::Result;
 use axum::routing::get;
 use axum::Router;
 
+mod error;
 mod game_info;
 mod tables;
 mod utils;
-mod error;
 
 #[tokio::main]
 async fn main() -> Result<()> {

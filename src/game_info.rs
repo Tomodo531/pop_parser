@@ -1,4 +1,7 @@
-use select::{document::Document, predicate::{Class, Attr}};
+use select::{
+    document::Document,
+    predicate::{Attr, Class},
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
