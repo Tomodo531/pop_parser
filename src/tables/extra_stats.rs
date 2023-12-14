@@ -1,26 +1,26 @@
 use select::document::Document;
 use serde::{Deserialize, Serialize};
 
-use crate::table_scraper::{self, Team};
+use crate::tables::table_scraper::{self, Team};
 
-use super::stats::{Stats, StatsTrait};
+use super::stats::{Stats, StatsTrait, StatType, parse_stat};
 
 pub type ExtraStats = Vec<PlayerExtraStats>;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlayerExtraStats {
     name: String,
-    fk: i32,
-    fd: i32,
-    sk: i32,
-    sd: i32,
-    pk: i32,
-    pd: i32,
-    nk: i32,
-    nd: i32,
-    kare: i32,
-    dare: i32,
-    sr: i32,
+    fk: StatType,
+    fd: StatType,
+    sk: StatType,
+    sd: StatType,
+    pk: StatType,
+    pd: StatType,
+    nk: StatType,
+    nd: StatType,
+    kare: StatType,
+    dare: StatType,
+    sr: StatType,
 }
 
 impl StatsTrait<PlayerExtraStats> for Stats<PlayerExtraStats> {
@@ -47,17 +47,17 @@ impl StatsTrait<PlayerExtraStats> for Stats<PlayerExtraStats> {
     fn create_player_stats(player: Vec<String>) -> PlayerExtraStats {
         PlayerExtraStats {
             name: player[0].parse().unwrap(),
-            fk: player[1].parse().unwrap(),
-            fd: player[2].parse().unwrap(),
-            sk: player[3].parse().unwrap(),
-            sd: player[4].parse().unwrap(),
-            pk: player[5].parse().unwrap(),
-            pd: player[6].parse().unwrap(),
-            nk: player[7].parse().unwrap(),
-            nd: player[8].parse().unwrap(),
-            kare: player[9].parse().unwrap(),
-            dare: player[10].parse().unwrap(),
-            sr: player[11].parse().unwrap(),
+            fk: parse_stat(&player[1]),
+            fd: parse_stat(&player[2]),
+            sk: parse_stat(&player[3]),
+            sd: parse_stat(&player[4]),
+            pk: parse_stat(&player[5]),
+            pd: parse_stat(&player[6]),
+            nk: parse_stat(&player[7]),
+            nd: parse_stat(&player[8]),
+            kare: parse_stat(&player[9]),
+            dare: parse_stat(&player[10]),
+            sr: parse_stat(&player[11]),
         }
     }
 }

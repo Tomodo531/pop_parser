@@ -1,25 +1,25 @@
 use select::document::Document;
 use serde::{Deserialize, Serialize};
 
-use crate::table_scraper::{self, Team};
+use crate::tables::table_scraper::{self, Team};
 
-use super::stats::{Stats, StatsTrait};
+use super::stats::{Stats, StatsTrait, StatType, parse_stat};
 
 pub type BasicStats = Vec<PlayerBasicStats>;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlayerBasicStats {
     name: String,
-    k: i32,
-    a: i32,
-    d: i32,
-    adr: f32,
-    hltv: f32,
-    ck: i32,
-    bp: i32,
-    bd: i32,
-    hs: f32,
-    rp: i32,
+    k: StatType,
+    a: StatType,
+    d: StatType,
+    adr: StatType,
+    hltv: StatType,
+    ck: StatType,
+    bp: StatType,
+    bd: StatType,
+    hs: StatType,
+    rp: StatType,
 }
 
 impl StatsTrait<PlayerBasicStats> for Stats<PlayerBasicStats> {
@@ -46,16 +46,16 @@ impl StatsTrait<PlayerBasicStats> for Stats<PlayerBasicStats> {
     fn create_player_stats(player: Vec<String>) -> PlayerBasicStats {
         PlayerBasicStats {
             name: player[0].parse().unwrap(),
-            k: player[1].parse().unwrap(),
-            a: player[2].parse().unwrap(),
-            d: player[3].parse().unwrap(),
-            adr: player[4].parse().unwrap(),
-            hltv: player[5].parse().unwrap(),
-            ck: player[6].parse().unwrap(),
-            bp: player[7].parse().unwrap(),
-            bd: player[8].parse().unwrap(),
-            hs: player[9].parse().unwrap(),
-            rp: player[10].parse().unwrap(),
+            k: parse_stat(&player[1]),
+            a: parse_stat(&player[2]),
+            d: parse_stat(&player[3]),
+            adr: parse_stat(&player[4]),
+            hltv: parse_stat(&player[5]),
+            ck: parse_stat(&player[6]),
+            bp: parse_stat(&player[7]),
+            bd: parse_stat(&player[8]),
+            hs: parse_stat(&player[9]),
+            rp: parse_stat(&player[10]),
         }
     }
 }

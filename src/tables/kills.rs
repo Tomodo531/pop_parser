@@ -1,26 +1,26 @@
 use select::document::Document;
 use serde::{Deserialize, Serialize};
 
-use crate::table_scraper::{self, Team};
+use crate::tables::table_scraper::{self, Team};
 
-use super::stats::{Stats, StatsTrait};
+use super::stats::{Stats, StatsTrait, parse_stat, StatType};
 
 pub type KillsStats = Vec<PlayerKillsStats>;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlayerKillsStats {
     name: String,
-    awp: i32,
-    k1: i32,
-    k2: i32,
-    k3: i32,
-    k4: i32,
-    k5: i32,
-    v1v1: i32,
-    v2: i32,
-    v3: i32,
-    v4: i32,
-    v5: i32,
+    awp: StatType,
+    k1: StatType,
+    k2: StatType,
+    k3: StatType,
+    k4: StatType,
+    k5: StatType,
+    v1v1: StatType,
+    v2: StatType,
+    v3: StatType,
+    v4: StatType,
+    v5: StatType,
 }
 
 impl StatsTrait<PlayerKillsStats> for Stats<PlayerKillsStats> {
@@ -48,17 +48,17 @@ impl StatsTrait<PlayerKillsStats> for Stats<PlayerKillsStats> {
     fn create_player_stats(player: Vec<String>) -> PlayerKillsStats {
         PlayerKillsStats {
             name: player[0].parse().unwrap(),
-            awp: player[1].parse().unwrap(),
-            k1: player[2].parse().unwrap(),
-            k2: player[3].parse().unwrap(),
-            k3: player[4].parse().unwrap(),
-            k4: player[5].parse().unwrap(),
-            k5: player[6].parse().unwrap(),
-            v1v1: player[7].parse().unwrap(),
-            v2: player[8].parse().unwrap(),
-            v3: player[9].parse().unwrap(),
-            v4: player[10].parse().unwrap(),
-            v5: player[11].parse().unwrap(),
+            awp: parse_stat(&player[1]),
+            k1: parse_stat(&player[2]),
+            k2: parse_stat(&player[3]),
+            k3: parse_stat(&player[4]),
+            k4: parse_stat(&player[5]),
+            k5: parse_stat(&player[6]),
+            v1v1: parse_stat(&player[7]),
+            v2: parse_stat(&player[8]),
+            v3: parse_stat(&player[9]),
+            v4: parse_stat(&player[10]),
+            v5: parse_stat(&player[11]),
         }
     }
 }

@@ -1,23 +1,23 @@
 use select::document::Document;
 use serde::{Deserialize, Serialize};
 
-use crate::table_scraper::{self, Team};
+use crate::tables::table_scraper::{self, Team};
 
-use super::stats::{Stats, StatsTrait};
+use super::stats::{Stats, StatsTrait, StatType, parse_stat};
 
 pub type FlashStats = Vec<PlayerFlashStats>;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlayerFlashStats {
     name: String,
-    fa: i32,
-    ft: i32,
-    feh: i32,
-    fep: String,
-    fed: f32,
-    fth: i32,
-    ftp: String,
-    ftd: f32,
+    fa: StatType,
+    ft: StatType,
+    feh: StatType,
+    fep: StatType,
+    fed: StatType,
+    fth: StatType,
+    ftp: StatType,
+    ftd: StatType,
 }
 
 impl StatsTrait<PlayerFlashStats> for Stats<PlayerFlashStats> {
@@ -44,14 +44,14 @@ impl StatsTrait<PlayerFlashStats> for Stats<PlayerFlashStats> {
     fn create_player_stats(player: Vec<String>) -> PlayerFlashStats {
         PlayerFlashStats {
             name: player[0].parse().unwrap(),
-            fa: player[1].parse().unwrap(),
-            ft: player[2].parse().unwrap(),
-            feh: player[3].parse().unwrap(),
-            fep: player[4].parse().unwrap(),
-            fed: player[5].parse().unwrap(),
-            fth: player[6].parse().unwrap(),
-            ftp: player[7].parse().unwrap(),
-            ftd: player[8].parse().unwrap(),
+            fa: parse_stat(&player[1]),
+            ft: parse_stat(&player[2]),
+            feh: parse_stat(&player[3]),
+            fep: parse_stat(&player[4]),
+            fed: parse_stat(&player[5]),
+            fth: parse_stat(&player[6]),
+            ftp: parse_stat(&player[7]),
+            ftd: parse_stat(&player[8]),
         }
     }
 }

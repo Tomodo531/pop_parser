@@ -1,4 +1,4 @@
-use select::{document::Document, predicate::Class};
+use select::{document::Document, predicate::{Class, Attr}};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -24,7 +24,7 @@ pub fn get_game_info(document: &Document) -> GameInfo {
     let community = header.find(Class("eKiPsS")).next().unwrap().text();
 
     let general_info: Vec<String> = header
-        .find(Class("text-gray-400"))
+        .find(Attr("class", "flex items-center text-gray-400"))
         .next()
         .unwrap()
         .text()
@@ -37,9 +37,9 @@ pub fn get_game_info(document: &Document) -> GameInfo {
         team_2_rounds: rounds[1].parse().unwrap(),
         community,
         map: general_info[0].parse().unwrap(),
-        region: general_info[0].parse().unwrap(),
-        date: general_info[0].parse().unwrap(),
-        time: general_info[0].parse().unwrap(),
-        mode: general_info[0].parse().unwrap(),
+        region: general_info[1].parse().unwrap(),
+        date: general_info[2].parse().unwrap(),
+        time: general_info[3].parse().unwrap(),
+        mode: general_info[4].parse().unwrap(),
     }
 }
